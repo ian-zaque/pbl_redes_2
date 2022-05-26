@@ -1,7 +1,11 @@
 from client import Client
-
+import random, string
 class Caminhao(Client):
 
-    def __init__(self, id, HOST= '127.0.0.1'):
-        Client.__init__(self, HOST, 50000)
-        self.__id = id
+    def __init__(self):
+        ID = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+        topic = '/caminhao/'+ID
+        Client.__init__(self, ID, topic)
+        
+        print("Caminhão:", ID)
+        print("Topic: ", topic)

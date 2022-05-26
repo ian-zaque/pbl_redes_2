@@ -1,15 +1,16 @@
-from client import Client
+from server import Server
 import random, string
 
-class Lixeira(Client):
-
+class Setor(Server):
+    
     def __init__(self):
         ID = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
-        topic = '/lixeira/'+ID
-        Client.__init__(self, ID, topic)
+        topic = '/setor/'+ID
+        Server.__init__(self, ID, topic)
         
-        print("Lixeira:", ID)
+        print("Setor:", ID)
         print("Topic: ", topic)
         
-lixera = Lixeira()
-lixera.run()
+
+setor = Setor()
+setor.run()
