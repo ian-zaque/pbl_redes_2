@@ -14,7 +14,6 @@ class Lixeira(Client):
         self.__lixo = 0
         
         Client.__init__(self, ID, topic)
-        self._msg['tipo'] = 'lixeira'
         self._msg['id'] = self.__ID
         self._msg['objeto'] = self.dadosLixeira()
         
@@ -28,12 +27,11 @@ class Lixeira(Client):
             status = "Desbloqueada"
 
         return {
-            "id": self.__ID,
-            "Latitude": self.__latitude, 
-            "Longitude": self.__longitude, 
-            "Status": status, 
-            "Capacidade": self.__capacidade, 
-            "Total preenchido": f'{self.getPorcentagem()*100:.2f}'+'%'
+            "latitude": self.__latitude, 
+            "longitude": self.__longitude, 
+            "status": status, 
+            "capacidade": self.__capacidade, 
+            "porcentagem": f'{self.getPorcentagem()*100:.2f}'+'%'
         }
     
     
@@ -52,6 +50,7 @@ class Lixeira(Client):
                 self.__bloqueado = True
                 
         self._msg['objeto'] = self.dadosLixeira()
+        self._msg['acao'] = 'addLixo'
         self.enviarDados()
     
     def esvaziarLixeira(self):
@@ -64,6 +63,7 @@ class Lixeira(Client):
 
         #retorna nova informacao sobre o objeto
         self._msg['objeto'] = self.dadosLixeira()
+        self._msg['acao'] = 'removeLixo'
         self.enviarDados()
         
         print(f"Lixeira {self.__ID} ESVAZIADA")
@@ -74,6 +74,7 @@ class Lixeira(Client):
         """  
         self.__bloqueado = True
         self._msg['objeto'] = self.dadosLixeira()
+        self._msg['acao'] = 'blockLixo'
         self.enviarDados()
         print(f"Lixeira {self.__id} BLOQUEADA")
 
@@ -87,6 +88,7 @@ class Lixeira(Client):
             
             #retorna nova informacao sobre o objeto
             self._msg['objeto'] = self.dadosLixeira()
+            self._msg['acao'] = 'unblockLixo'
             self.enviarDados()
         
         else:

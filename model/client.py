@@ -4,7 +4,7 @@ from paho.mqtt import client as mqtt_client
 
 _BROKER = 'test.mosquitto.org'
 _PORT = 1883
-_TOPIC = 'lixeira'
+# _TOPIC = 'lixeira'
 
 class Client:
     
@@ -13,7 +13,7 @@ class Client:
         self.username = 'user_'+ self.server_id
         self.password = 'senhaforte'
         self.topic = topic
-        self._msg = {'tipo': '', 'acao': '', 'id': ''}
+        self._msg = {'acao': '', 'id': ''}
         self.MQTT_CLIENT = None
     
     def getID(self):
@@ -36,19 +36,19 @@ class Client:
         self.MQTT_CLIENT.connect(_BROKER, _PORT)
         return self.MQTT_CLIENT
 
-    def publish(self,client):
-        msg_count = 0
-        while True:
-            time.sleep(1)
-            msg = f"messages: {msg_count}"
-            result = client.publish(_TOPIC, msg)
-            # result: [0, 1]
-            status = result[0]
-            if status == 0:
-                print(f"Send `{msg}` to topic `{_TOPIC}`")
-            else:
-                print(f"Failed to send message to topic {_TOPIC}")
-            msg_count += 1
+    # def publish(self,client):
+    #     msg_count = 0
+    #     while True:
+    #         time.sleep(1)
+    #         msg = f"messages: {msg_count}"
+    #         result = client.publish(self.topic, msg)
+    #         # result: [0, 1]
+    #         status = result[0]
+    #         if status == 0:
+    #             print(f"Send `{msg}` to topic `{self.topic}`")
+    #         else:
+    #             print(f"Failed to send message to topic {self.topic}")
+    #         msg_count += 1
 
 
     def run(self):
@@ -65,13 +65,14 @@ class Client:
                 mensagem que sera enviada para o servidor
         """
         try:
-            msg = f"message: {self._msg}"
-            result = self.MQTT_CLIENT.publish(_TOPIC, msg)
+            msg = str(self._msg)
+            result = self.MQTT_CLIENT.publish(self.topic, msg)
             # result: [0, 1]
             status = result[0]
             if status == 0:
-                print(f"Send `{msg}` to topic `{_TOPIC}`")
+                print(msg)
+                print(f"Send `{msg}` to topic `{self.topic}`")
             else:
-                print(f"Failed to send message to topic {_TOPIC}")
+                print(f"Failed to send message to topic {self.topic}")
         except Exception as ex:
             print("Não foi possivel enviar a mensagem => ", ex) 
