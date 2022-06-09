@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from model.adm import Adm
 
 app = Flask(__name__)
@@ -6,7 +6,7 @@ app.config['DEBUG'] = True
 
 @app.route('/')
 def index():
-    return '<h1>Encontre uma ONG</h1><p>Este site é um protótipo de API para encontrar ONGs pelo Brasil.</p>'
+    return render_template('index.html')
 
 ########## ROTAS LIXEIRA ##########
 @app.route('/lixeiras/<number>', methods=['GET'])

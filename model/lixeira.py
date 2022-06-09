@@ -1,6 +1,8 @@
 from pydoc_data.topics import topics
+from time import sleep
 from client import Cliente
-import random, string
+from random import randint
+from threading import Thread, local
 
 class Lixeira(Cliente):
 
@@ -90,6 +92,19 @@ class Lixeira(Cliente):
         else:
             print(f"Lixeira Cheia! Impossível desbloquear Lixeira {self.__id}")
     
+    def generateRandomData(self):
+        # options = {1: 'add', 2:'bloquear', 3:'desbloquear'}
+        while self.__bloqueado == False:
+            sleep(2)
+            opt = randint(1,3)
+            
+            if opt == 1: self.addLixo(1)
+            elif opt == 2: self.bloquear()
+            elif opt == 3: self.desbloquear()
+            
+            opt = 0
+            sleep(3)
+    
     def receberDados(self):
         """Recebe a mensagem do servidor e realiza ações
         """
@@ -113,3 +128,4 @@ class Lixeira(Cliente):
 
 lixera = Lixeira(150, 200)
 lixera.run()
+Thread(target=lixera.generateRandomData).start()
