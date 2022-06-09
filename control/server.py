@@ -1,41 +1,64 @@
-from paho.mqtt import client as mqtt_client
-import random, time
+import json
+from pydoc_data.topics import topics
+import random
+import string
+import time
+
+from paho.mqtt.client import Client
+from threading import Thread
 
 _BROKER = 'test.mosquitto.org'
 _PORT = 1883
-_TOPIC = '/server'
 
-class Server:
+class Server():
     
-    def __init__(self, ID, topic):
-        self.client_id = 'server_'+ID
-        self.username = 'user_'+ self.client_id
-        self.password = 'senhaforte'
-        # self.topic = topic
+    def __init__(self, topic: str, topics: tuple):
+        self._server_id = topic+"".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+        self._topics = topics
         
-    def connect_mqtt(self) -> mqtt_client:
+    def connect_mqtt(self) -> Client:
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
-                print("Connected to MQTT Broker!")
+                print(f"Servidor iniciado! {self._server_id}")
             else:
-                print("Failed to connect, return code %d\n", rc)
-
-        client = mqtt_client.Client(self.client_id)
-        client.username_pw_set(self.username, self.password)
-        client.on_connect = on_connect
-        client.connect(_BROKER, _PORT)
-        return client
+                print("Falha ao se conectar, codigo de retorno %d\n", rc)
+        server = Client(self._server_id)
+        server.on_connect = on_connect
+        for topic in self._topics:
+            server.subscribe(topic) #se inscreve numa lista de topicos
+            print(topic)
+        server.connect(_BROKER, _PORT)
+        return server
     
-    def subscribe(self,client: mqtt_client):
+    def publish(self):
+        msg_count = 0
+        while True:
+            time.sleep(1)
+            try:
+                msg = json.dumps({"oláq0wq0w": 'duwh'}).encode("utf-8")
+                result = self._server.publish(self._topics[0], msg)
+                status = result[0]
+                if status == 0:
+                    print(f"Send `{msg}` to topic `{self._topics[0]}`")
+                else:
+                    print(f"Failed to send message to topic {self._topics[0]}")
+                msg_count += 1
+            except Exception as ex:
+                print("Não foi possivel enviar a mensagem => ", ex) 
+            
+   
+    """def mensagem(self):
         def on_message(client, userdata, msg):
-            print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-
-        client.subscribe('lixeira')
-        client.on_message = on_message
+            mensagem = msg.payload.decode()
+            print(f"Recebida `{mensagem}` do topico `{msg.topic}`")
+            if mensagem:
+                mensagem = json.loads(mensagem)
+            return mensagem"""
         
     def run(self):
-        print('222222222222')
-        client = self.connect_mqtt()
-        self.subscribe(client)
-        print('zzzzzzzzzz',client)
-        client.loop_forever()
+        self._server = self.connect_mqtt()
+        self.publish()
+        #self._server.on_message = self.mensagem()
+        #Thread(target=self.mensagem).start()
+        
+        

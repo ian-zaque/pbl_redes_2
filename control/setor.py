@@ -1,16 +1,15 @@
 from server import Server
 import random, string
 
+_TOPIC = ('lixeira/', 'caminhao/')
+
+
 class Setor(Server):
     
-    def __init__(self):
-        ID = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
-        topic = '/setor/'+ID
-        Server.__init__(self, ID, topic)
-        
-        print("Setor:", ID)
-        print("Topic: ", topic)
-        
-
+    def __init__(self, latitude, longitude):
+        self.__latitude = latitude
+        self.__longitude = longitude
+        Server.__init__(self, 'setor/', _TOPIC)
+    
 setor = Setor()
 setor.run()

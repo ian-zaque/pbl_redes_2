@@ -1,78 +1,61 @@
+import json
+import random
+import string
+from threading import Thread
 import time
-from paho.mqtt import client as mqtt_client
 
+from paho.mqtt.client import Client
 
 _BROKER = 'test.mosquitto.org'
 _PORT = 1883
-# _TOPIC = 'lixeira'
 
-class Client:
+class Cliente: 
     
-    def __init__(self, ID, topic):
-        self.server_id = 'client_'+ID
-        self.username = 'user_'+ self.server_id
-        self.password = 'senhaforte'
-        self.topic = topic
-        self._msg = {'acao': '', 'id': ''}
-        self.MQTT_CLIENT = None
+    def __init__(self, type: str, topic=""):
+        self._client_id = f'/{type}/'.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+        self._topic = topic
+        self._msg = {'request': '', 'response': ''}
+        self._client_mqtt = Client(self._client_id)  
     
-    def getID(self):
-        return self.server_id
-    
-    def getTopic(self):
-        return self.topic
-    
-    def connect_mqtt(self):
+    def connect_mqtt(self) -> Client:
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
-                print("Connected to MQTT Broker!")
+                print("Conectado ao Broker!")
             else:
-                print("Failed to connect, return code %d\n", rc)
-                
-        # Connecting Client ID
-        self.MQTT_CLIENT = mqtt_client.Client(self.server_id)
-        self.MQTT_CLIENT.username_pw_set(self.username, self.password)
-        self.MQTT_CLIENT.on_connect = on_connect
-        self.MQTT_CLIENT.connect(_BROKER, _PORT)
-        return self.MQTT_CLIENT
+                print("Falha ao se conectar, código de erro: %d\n", rc)
+       
+        self._client_mqtt.on_connect = on_connect
+        self._client_mqtt.connect(_BROKER, _PORT)
+        self._client_mqtt.subscribe(self._topic)
 
-    # def publish(self,client):
-    #     msg_count = 0
-    #     while True:
-    #         time.sleep(1)
-    #         msg = f"messages: {msg_count}"
-    #         result = client.publish(self.topic, msg)
-    #         # result: [0, 1]
-    #         status = result[0]
-    #         if status == 0:
-    #             print(f"Send `{msg}` to topic `{self.topic}`")
-    #         else:
-    #             print(f"Failed to send message to topic {self.topic}")
-    #         msg_count += 1
+        return self._client_mqtt
 
+    def receberDados(self):
+        def on_message(client, userdata, msg):
+            mensagem = msg.payload
+            if mensagem:
+                mensagem = json.loads(mensagem)
+                print(mensagem)
+                return mensagem
+            
+        self._client_mqtt.on_message = on_message
 
     def run(self):
-        print('111111111')
-        self.MQTT_CLIENT = self.connect_mqtt()
-        self.MQTT_CLIENT.loop_start()
-        print('aaaaaaaaaaaa',self.MQTT_CLIENT)
-        self.enviarDados()
+        self._client_mqtt = self.connect_mqtt()
+        self.receberDados()
+        #Thread(target=self.receberDados).start()
+        self._client_mqtt.loop_forever()
+
     
-    def enviarDados(self):
-        """
-        Envia dados para o servidor
-            @param msg: str
-                mensagem que sera enviada para o servidor
-        """
+    """def enviarDados(self):
         try:
             msg = str(self._msg)
-            result = self.MQTT_CLIENT.publish(self.topic, msg)
-            # result: [0, 1]
+            result = self._client_mqtt.publish(self._topic, msg)
             status = result[0]
             if status == 0:
                 print(msg)
-                print(f"Send `{msg}` to topic `{self.topic}`")
+                print(f"Enviando mensagem para o topico `{self._topic}`")
             else:
-                print(f"Failed to send message to topic {self.topic}")
+                print(f"Falha ao enviar mensagem para o topico {self._topic}")
         except Exception as ex:
-            print("Não foi possivel enviar a mensagem => ", ex) 
+            print("Não foi possivel enviar a mensagem => ", ex) """
