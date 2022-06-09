@@ -1,3 +1,4 @@
+from pydoc_data.topics import topics
 from client import Cliente
 import random, string
 
@@ -9,7 +10,9 @@ class Lixeira(Cliente):
         self.__capacidade = 10 #m³
         self.__bloqueado = False
         self.__lixo = 0
+        self.__porcentagem = 0
         Cliente.__init__(self, "lixeira", "lixeira/")
+        self._topicsPublish = (f"lixeira/{self._client_id}/estadoCritico")
         
     def dadosLixeira(self):
         """Informacoes da lixeira
@@ -28,7 +31,7 @@ class Lixeira(Cliente):
             "longitude": self.__longitude, 
             "status": status, 
             "capacidade": self.__capacidade, 
-            "porcentagem": f'{self.__lixo/self.__capacidade*100:.2f}'+'%'
+            "porcentagem": f'{self.__porcentagem:,.2f}'+'%'
         }
     
     def addLixo(self, lixo: int):
@@ -43,11 +46,13 @@ class Lixeira(Cliente):
         """
         if(self.__capacidade >= self.__lixo + lixo): #se a capacidade de lixo nao for excedida, o lixo é adicionado
             self.__lixo += lixo
-            
+            self.__porcentagem = self.__lixo/self.__capacidade*100
+            if(self.__porcentagem > 80):
+                self.enviarDados(self.__topicsPublish)
             if(self.__capacidade == self.__lixo): #se a capacidade de lixo chegar ao limite, o lixo e bloqueado
                 self.__bloqueado = True
                 
-        self._msg['response'] = self.dadosLixeira()
+        self._msg['dados'] = self.dadosLixeira()
         self.enviarDados()
     
     def esvaziarLixeira(self):
@@ -58,28 +63,28 @@ class Lixeira(Cliente):
         self.__lixo = 0
 
         #retorna nova informacao sobre o objeto
-        self._msg['response'] = self.dadosLixeira()
+        self._msg['dados'] = self.dadosLixeira()
         self.enviarDados()
         
-        print(f"Lixeira {self.__ID} ESVAZIADA")
+        print(f"Lixeira {self._client_id} ESVAZIADA")
     
     def bloquear(self):
         """Trava a porta da lixeira
         """  
         self.__bloqueado = True
-        self._msg['response'] = self.dadosLixeira()
+        self._msg['dados'] = self.dadosLixeira()
         self.enviarDados()
-        print(f"Lixeira {self.__id} BLOQUEADA")
+        print(f"Lixeira {self._client_id} BLOQUEADA")
 
     def desbloquear(self):
         """Destrava a porta da lixeira
         """
         if(self.__capacidade > self.__lixo):
             self.__bloqueado = False
-            print(f"Lixeira {self.__id} DESBLOQUEADA")
+            print(f"Lixeira {self._client_id} DESBLOQUEADA")
             
             #retorna nova informacao sobre o objeto
-            self._msg['response'] = self.dadosLixeira()
+            self._msg['dados'] = self.dadosLixeira()
             self.enviarDados()
         
         else:
@@ -88,27 +93,23 @@ class Lixeira(Cliente):
     def receberDados(self):
         """Recebe a mensagem do servidor e realiza ações
         """
-        try:
-            mensagem = super().receberDados()
-            print('MENSAGEM: ', mensagem)
-            if(mensagem):
-                if(mensagem['request'] == "esvaziar"):
-                    print("Esvaziando Lixeira...")
-                    self.esvaziarLixeira()
-                elif(mensagem['request'] == "bloquear"):
-                    print("Bloqueando Lixeira...")
-                    self.bloquear()
-                elif(mensagem['request'] == "desbloquear"):
-                    print("Desbloqueando Lixeira...")
-                    self.desbloquear()
-        except Exception as ex:
-            print("Erro ao receber dados => ", ex)
-            
-    """def run(self):
-        self._client_mqtt = self.connect_mqtt()
-        self.receberDados()
-        #Thread(target=self.receberDados).start()
-        self._client_mqtt.loop_forever()"""
-    
+        while True:
+            try:
+                super().receberDados()
+                if('acao' in self._mensagemRequest):
+                    if(self._mensagemRequest['acao'] == "esvaziar"):
+                        print("Esvaziando Lixeira...")
+                        self.esvaziarLixeira()
+                    elif(self._mensagemRequest['acao'] == "bloquear"):
+                        print("Bloqueando Lixeira...")
+                        self.bloquear()
+                    elif(self._mensagemRequest['acao'] == "desbloquear"):
+                        print("Desbloqueando Lixeira...")
+                        self.desbloquear()
+            except Exception as ex:
+                print("Erro ao receber dados => ", ex)
+                break
+
+
 lixera = Lixeira(150, 200)
 lixera.run()

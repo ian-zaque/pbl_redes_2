@@ -34,26 +34,3 @@ class Caminhao(Cliente):
                 
         return lixeira_mais_prox["id"]
     
-    def __ordemColeta(self, lixeiras_coletar: list) -> list:
-        """Organiza a ordem de coleta por parte do adm
-        
-        Args:
-            lixeiras_coletar (list): lista de lixeiras criticas para serem coletadas
-
-        Returns:
-            list : todas as lixeiras mais criticas a serem coletadas
-        """
-
-        listaOrdenada = []
-        for l in lixeiras_coletar:
-            listaOrdenada.append((l['id'], l['porcentagem'])) #aciono apenas os ids e o total de lixo em uma tupla
-
-        sorted(listaOrdenada, key=lambda l:l[1], reverse=True) #ordeno em ordem decrescente
-
-        lista = []
-        for l in listaOrdenada: #adiciono apenas o id na lista
-            lista.append(l[0])
-            
-        return lista
-
-    
