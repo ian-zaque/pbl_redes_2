@@ -11,18 +11,18 @@
 ### Máquina
 <div align="justify">
   <ol>
- ​    <li>  
- ​       Sistema operacional:  e 11;
-        <ol> 
-            <li>Windows 10; </li>
-            <li>Ubuntu 22.04 LTS ; </li>
-        </ol>
- ​     </li>
+ ​   <li>  
+ ​     Sistema operacional:  e 11;
+      <ol> 
+          <li>Windows 10;</li>
+          <li>Ubuntu 22.04 LTS;</li>
+      </ol>
+ ​   </li>
     <li> 
-       Linguagem de programação: Python 3.10.4;
-     </li>
+      Linguagem de programação: Python 3.10.4;
+    </li>
     <li> 
-       Bibliotecas nativas utilizadas:
+      Bibliotecas nativas utilizadas:
       <ol> 
         <li>flask; </li>
         <li>json; </li>
@@ -35,9 +35,7 @@
   </ol>
 </div>
 
-### Instalção
-
-This tutorial assumes you already have a valid Python instalation. If not, please check the website above for tutorials.
+### Instruções
 
 1. Clone o repositório.
    ```sh
