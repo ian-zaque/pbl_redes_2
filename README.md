@@ -9,31 +9,17 @@
 </div>
 
 ### Máquina
-<div align="justify">
-  <ol>
- ​   <li>  
- ​     Sistema operacional:  e 11;
-      <ol> 
-          <li>Windows 10;</li>
-          <li>Ubuntu 22.04 LTS;</li>
-      </ol>
- ​   </li>
-    <li> 
-      Linguagem de programação: Python 3.10.4;
-    </li>
-    <li> 
-      Bibliotecas nativas utilizadas:
-      <ol> 
-        <li>flask; </li>
-        <li>json; </li>
-        <li>paho_mqtt; </li>
-        <li>random; </li>
-        <li>string; </li>
-        <li>threading; </li>
-      </ol>
-    </li>
-  </ol>
-</div>
+1. Sistema operacional:
+  - Windows 10;
+  - Ubuntu 22.04 LTS;
+2. Linguagem de programação: Python 3.10.4;
+  - Bibliotecas nativas utilizadas:
+    - flask;
+    - json;
+    - paho_mqtt;
+    - random;
+    - string;
+    - threading;
 
 ### Instruções
 
