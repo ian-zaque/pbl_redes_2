@@ -14,7 +14,7 @@ class Lixeira(Cliente):
         self.__lixo = 0
         self.__porcentagem = 0
         Cliente.__init__(self, "lixeira", "lixeira/")
-        self._topicsPublish = (f"lixeira/{self._client_id}/estadoCritico")
+        self._topicsPublish = (f"lixeira/{self._client_id}")
         
     def dadosLixeira(self):
         """Informacoes da lixeira
@@ -111,14 +111,14 @@ class Lixeira(Cliente):
         while True:
             try:
                 super().receberDados()
-                if('acao' in self._mensagemRequest):
-                    if(self._mensagemRequest['acao'] == "esvaziar"):
+                if('acao' in self._msg):
+                    if(self._msg['acao'] == "esvaziar"):
                         print("Esvaziando Lixeira...")
                         self.esvaziarLixeira()
-                    elif(self._mensagemRequest['acao'] == "bloquear"):
+                    elif(self._msg['acao'] == "bloquear"):
                         print("Bloqueando Lixeira...")
                         self.bloquear()
-                    elif(self._mensagemRequest['acao'] == "desbloquear"):
+                    elif(self._msg['acao'] == "desbloquear"):
                         print("Desbloqueando Lixeira...")
                         self.desbloquear()
             except Exception as ex:

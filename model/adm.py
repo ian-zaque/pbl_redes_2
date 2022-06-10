@@ -1,22 +1,42 @@
-from model.client import Client
-import random, string, json
+from model.client import Cliente
 
 
-class Adm(Client):
+class Adm(Cliente):
 
-    def __init__(self):
-        ID = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
-        topic = '/adm/'+ID
-        Client.__init__(self, ID, topic)
-        
-        print("ADM:", ID)
-        print("Topic: ", topic)
+    def __init__(self, topico):
+        Cliente.__init__(self, "adm", "adm/")
+        self.__lixeiras
    
-    def getLixeirasByNumber(number: int):
+    def getLixeirasByNumber(self, number: int) -> list:
+        """Retorna a quantidade de lixeiras exigida
+
+        Args:
+            number (int): numero de lixeiras a ser retornado
+
+        Returns:
+            list: lista de lixeiras
+        """
         # after subscribed, retrieve data from topic /lixeiras and limit by number
-        return str(number) + ' lixeiras pedidas'
+        if  number >= 0 and number <= len(self.__lixeiras):
+            return self.__lixeiras[:number]
+        return self.__lixeiras
     
-    def getLixeiraByID(id):
+    def getLixeiraByID(self, id):
         # after subscribed, retrieve data from topic /lixeiras/id and return
-        return 'Lixeira de ID: ' + str(id)
+        for l in self.__lixeiras:
+            if id in l:
+                return l
+        return {}
         
+    def receberDados(self):
+        """Recebe a mensagem do servidor e realiza ações
+        """
+        while True:
+            try:
+                super().receberDados()
+                if 'dados' in self._msg:
+                    self.__lixeiras = self._msg['dados']['lixeiras']
+                
+            except Exception as ex:
+                print("Erro ao receber dados => ", ex)
+                break

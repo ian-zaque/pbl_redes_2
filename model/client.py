@@ -17,7 +17,6 @@ class Cliente:
         self._topic = topic
         self._topicsPublish = ()
         self._msg = {'dados': '', 'acao': ''}
-        self._mensagemRequest = {'dados': '', 'acao': ''}
         self._client_mqtt = Client(self._client_id)
     
     def connect_mqtt(self) -> Client:
@@ -37,11 +36,11 @@ class Cliente:
         return self._client_mqtt
 
     def receberDados(self):
+        
         def on_message(client, userdata, msg):
             mensagem = msg.payload
             if mensagem:
-                self._mensagemRequest = json.loads(mensagem)
-                print(mensagem, msg.topic)
+                self._msg = json.loads(mensagem)
                 return mensagem
             
         self._client_mqtt.on_message = on_message
