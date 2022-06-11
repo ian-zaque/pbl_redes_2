@@ -1,5 +1,5 @@
 import json
-import random
+from random import randint
 import string
 from threading import Thread
 
@@ -85,7 +85,9 @@ class Setor(Server):
         """
         lista = []
         for l in lixeiras: #adiciono apenas o id na lista
-            lista.append(l['dados']['id'])
+            print('LLLLLLLLL', l)
+            if 'dados' in l: lista.append(l['dados']['id'])
+            elif 'dados' not in l: lista.append(l['id'])
             
         return lista
 
@@ -93,5 +95,5 @@ class Setor(Server):
         self._server = self.connect_mqtt()
         Thread(target=self.receberDados).start()
     
-setor = Setor(100, 200)
+setor = Setor(randint(0,50), randint(0,50))
 setor.run()

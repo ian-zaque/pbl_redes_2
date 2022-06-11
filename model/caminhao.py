@@ -73,7 +73,7 @@ class Caminhao(Cliente):
     def receberDados(self):
         """Recebe a mensagem do servidor e realiza ações
         """
-        D
+        
 
     def run(self):
         super().run()
