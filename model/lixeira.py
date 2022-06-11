@@ -9,7 +9,7 @@ class Lixeira(Cliente):
     def __init__(self, latitude, longitude):
         self.__latitude = latitude
         self.__longitude = longitude
-        self.__capacidade = 10 #m³
+        self.__capacidade = randint(1,10) #m³
         self.__bloqueado = False
         self.__lixo = 0
         self.__porcentagem = 0
@@ -96,13 +96,13 @@ class Lixeira(Cliente):
         # options = {1: 'add', 2:'bloquear', 3:'desbloquear'}
         while self.__bloqueado == False:
             sleep(2)
-            opt = randint(1,3)
+            option = randint(1,3)
             
-            if opt == 1: self.addLixo(1)
-            elif opt == 2: self.bloquear()
-            elif opt == 3: self.desbloquear()
+            if option == 1: self.addLixo(1)
+            elif option == 2: self.bloquear()
+            elif option == 3: self.desbloquear()
             
-            opt = 0
+            option = 0
             sleep(3)
     
     def receberDados(self):
@@ -126,6 +126,6 @@ class Lixeira(Cliente):
                 break
 
 
-lixera = Lixeira(150, 200)
+lixera = Lixeira(randint(0,50), randint(0,50))
 lixera.run()
 Thread(target=lixera.generateRandomData).start()
