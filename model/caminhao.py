@@ -3,6 +3,7 @@ import random, string
 from time import sleep
 
 from client import Cliente
+from model.lixeira import Lixeira
 
 
 class Caminhao(Cliente):
@@ -14,20 +15,19 @@ class Caminhao(Cliente):
         self.__lixeiras_coletar = []
         Cliente.__init__(self, "caminhao", "caminhao/")
     
-    def dadosCaminhao(self):
+    def dadosCaminhao(self) -> dict:
         """Informacoes da lixeira
 
         Returns:
             dict: informacoes da lixeira
         """
-
         return {
             "id": self._client_id,
             "latitude": self.__latitude, 
             "longitude": self.__longitude
         }
         
-    def __lixeiraMaisProxima(self, lixeiras_coletar: list):
+    def __lixeiraMaisProxima(self, lixeiras_coletar: list) -> Lixeira:
         """Seleciona a lixeira mais proxima do caminhao
 
         Args:
@@ -73,9 +73,11 @@ class Caminhao(Cliente):
     def receberDados(self):
         """Recebe a mensagem do servidor e realiza ações
         """
-        D
+        pass
 
     def run(self):
+        """"Metodo que inicia o servidor MQTT
+        """
         super().run()
         if len(self.__lixeiras_coletar) > 0:
             self.coletarLixeira()

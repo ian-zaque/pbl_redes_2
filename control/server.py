@@ -18,6 +18,11 @@ class Server():
         self._server = Client(self._server_id)
         
     def connect_mqtt(self) -> Client:
+        """Conecta o servidor mqtt, publica e se inscreve nos topicos iniciais
+
+        Returns:
+            Client: Cliente MQTT
+        """
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
                 print(f"Servidor iniciado! {self._server_id}")
@@ -33,7 +38,16 @@ class Server():
             self._server.subscribe(topic+"#") #se inscreve numa lista de topicos para todas
         return self._server
     
-    def enviarDados(self, topic, msg: dict):
+    def enviarDados(self, topic: str, msg: dict):
+        """Envia mensagens no formato json para determinado topico
+
+        Args:
+            topic (str): topico de destino
+            msg (dict): mensagem a convertida em json e enviada
+
+        Raises:
+            Exception: Retorna um erro para o caso do envio falhar
+        """
         try:
             msg = json.dumps(msg).encode("utf-8")
             result = self._server.publish(topic, msg)

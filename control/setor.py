@@ -17,8 +17,12 @@ class Setor(Server):
         self.__lixeiras = []
         Server.__init__(self, 'setor/', _TOPIC)
     
-    
     def receberDados(self):
+        """Recebe e gerencia as mensagens dos topicos para o qual o setor foi inscrito
+
+        Returns:
+            msg: mensagem de um determinado topico para o qual o setor se inscreveu
+        """
         while True:
             def on_message(client, userdata, msg):
                 mensagem = msg.payload
@@ -38,6 +42,11 @@ class Setor(Server):
             self._server.loop_start()
                    
     def gerenciarLixeiras(self, msg):
+        """Gerencia as mensagens enviadas para o topico lixeiras/
+
+        Args:
+            msg (dict): mensagem recebida de uma determinada lixeira
+        """
         if 'dados' in msg:     
             lixeirasId = self.__separaIds(self.__lixeiras)
             #se as lixeira nao estiver na lista de lixeras, ela sera adicionada, se estiver tera seu dados atualizado
@@ -59,17 +68,26 @@ class Setor(Server):
             self.__lixeiras = sorted(self.__lixeiras, key=lambda l:l["porcentagem"], reverse=True)
             self.enviarDadosServidor()
             
-    def gerenciarCaminhao(self, msg):
+    def gerenciarCaminhao(self, msg: dict):
+        """Gerencia as mensagens enviadas para o topico caminhao/
+
+        Args:
+            msg (dict): mensagem recebido do caminhao
+        """
         if 'acao' in msg:
             if msg['acao'] != '':
                 mensagem = {'acao': 'esvaziar'}
                 self.enviarDados(msg['acao'], mensagem)
    
     def enviarDadosServidor(self):
+        """Envia informacoes de todas as para o topico do adm/
+        """
         msg = {'dados': self.__lixeiras}
         self.enviarDados(f'adm/', msg)
 
     def enviarDadosCaminhao(self):
+        """Envia as lixeiras a serem coletada para o tópico caminhao/
+        """
         if len(self.__lixeiras_coletar):
             mensagem = {'dados': {'lixeiras': self.__lixeiras_coletar}}
             self.enviarDados('caminhao/', mensagem)
@@ -90,8 +108,22 @@ class Setor(Server):
         return lista
 
     def run(self):
+        """"Metodo que inicia o servidor MQTT
+        """
         self._server = self.connect_mqtt()
         Thread(target=self.receberDados).start()
     
+    def dadosSetor(self):
+        """Informacoes da lixeira
+
+        Returns:
+            dict: informacoes da lixeira
+        """
+        return {
+            "id": self._server_id,
+            "latitude": self.__latitude, 
+            "longitude": self.__longitude
+        }
+
 setor = Setor(100, 200)
 setor.run()

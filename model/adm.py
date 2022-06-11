@@ -21,7 +21,15 @@ class Adm(Cliente):
             return self.__lixeiras[:number]
         return self.__lixeiras
     
-    def getLixeiraByID(self, id):
+    def getLixeiraByID(self, id: str) -> dict:
+        """Busca uma lixera pelo id
+
+        Args:
+            id (str): id da lixera
+
+        Returns:
+            dict: dicionario contendo as informacoes de determinada lixeira 
+        """
         # after subscribed, retrieve data from topic /lixeiras/id and return
         for l in self.__lixeiras:
             if id in l:
