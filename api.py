@@ -4,6 +4,7 @@ from model.adm import Adm
 app = Flask(__name__)
 app.config['DEBUG'] = True
 adm = Adm()
+adm.run()
 
 @app.route('/')
 def index():

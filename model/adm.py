@@ -24,6 +24,7 @@ class Adm(Cliente):
         Returns:
             list: lista de lixeiras
         """
+        number = int(number)
         # after subscribed, retrieve data from topic /lixeiras and limit by number
         if  number >= 0 and number <= len(self.__lixeiras):
             return self.__lixeiras[:number]
@@ -40,7 +41,7 @@ class Adm(Cliente):
         """
         # after subscribed, retrieve data from topic /lixeiras/id and return
         for l in self.__lixeiras:
-            if id in l:
+            if id in l['id']:
                 return l
         return {}
         
@@ -50,7 +51,9 @@ class Adm(Cliente):
         while True:
             try:
                 super().receberDados()
-                self.__lixeiras = self._msg.get('dados')
+                if 'dados' in self._msg:
+                    # print(self._msg)
+                    self.__lixeiras = self._msg.get('dados')
             except Exception as ex:
                 print("Erro ao receber dados => ", ex)
                 break
