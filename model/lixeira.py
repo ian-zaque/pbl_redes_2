@@ -14,7 +14,6 @@ class Lixeira(Cliente):
         self.__lixo = 0
         self.__porcentagem = 0
         self._msg['acao'] = 'iniciar'
-        print('setor/caminhao/'+self._client_id)
         
     def dadosLixeira(self):
         """Informacoes da lixeira
@@ -145,9 +144,12 @@ class Lixeira(Cliente):
                 print("Erro ao receber dados => ", ex)
                 break
 
+    def run(self):
+        super().run()
+        Thread(target=self.generateRandomData).start()
 
 
-def geradorLixeiras(velocicdade_gerarLixeira: int = 5, velocidade_gerar_addLixo: int = 5)-> Lixeira:
+def geradorLixeiras(velocicdade_gerarLixeira: int = 5, qtd_lixeiras: int = 5)-> Lixeira:
     """Gera lixeiras com quantidades de lixo geradas de forma aleatoria
 
     Args:
@@ -156,13 +158,10 @@ def geradorLixeiras(velocicdade_gerarLixeira: int = 5, velocidade_gerar_addLixo:
         velocidade_gerar_addLixo (int): velocidade em segundos que o lixo sera adicionado. 
             5 por padrao.
     """
-    sleep(velocicdade_gerarLixeira)
-    l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
-    l.run()
-    while True:
-        sleep(velocidade_gerar_addLixo)
-        l.addLixo(randint(1, 100))
+    lixeiras = []
+    for i in range (qtd_lixeiras):
+        sleep(velocicdade_gerarLixeira)
+        lixeiras.append(Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000)))
+        lixeiras[i].run()
     
-l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
-l.run()
-Thread(target=l.generateRandomData).start()
+geradorLixeiras()
