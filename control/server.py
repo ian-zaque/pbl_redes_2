@@ -1,21 +1,17 @@
 import json
-from pydoc_data.topics import topics
-import random
-import string
-import time
-
-from paho.mqtt.client import Client
 from threading import Thread
 
-_BROKER = 'test.mosquitto.org'
-_PORT = 1883
+from paho.mqtt.client import Client
+
 
 class Server():
     
-    def __init__(self, topic: str, topics: tuple):
-        self._server_id = topic+"".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    def __init__(self, topic: str, topics: list = []):
+        self._broker = 'test.mosquitto.org'
+        self._port = 1883
+        self._server_id = topic
         self._topics = topics
-        self._server = Client(self._server_id)
+        self._server = Client(self._server_id) 
         
     def connect_mqtt(self) -> Client:
         """Conecta o servidor mqtt, publica e se inscreve nos topicos iniciais
@@ -27,15 +23,14 @@ class Server():
             if rc == 0:
                 print(f"Servidor iniciado! {self._server_id}")
             else:
-                print("Falha ao se conectar, codigo de retorno %d\n", rc)
+                print("Falha ao se conectar, codigo de retorno: ", rc)
         
         self._server.on_connect = on_connect
-        self._server.connect(_BROKER, _PORT)
-        print("Topicos: ", self._topics)
+        self._server.connect(self._broker, self._port)
+        self._server.publish(self._server_id)
         for topic in self._topics:
-            print("inscreveu-se no topico: ", topic)
-            self._server.publish(topic)
-            self._server.subscribe(topic+"#") #se inscreve numa lista de topicos para todas
+            print("Inscreveu-se no topico: ", topic+"#")
+            self._server.subscribe(topic+"#") #se inscreve numa lista de topicos
         return self._server
     
     def enviarDados(self, topic: str, msg: dict):
@@ -55,3 +50,9 @@ class Server():
                 raise Exception("Mensagem não enviada para o topico "+"'"+topic+"'")
         except Exception as ex:
             print(ex)
+            
+    def run(self):
+        """"Metodo que inicia o servidor MQTT
+        """
+        self._server = self.connect_mqtt()
+        Thread(target=self.receberDados).start()

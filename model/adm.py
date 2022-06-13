@@ -3,9 +3,9 @@ from model.client import Cliente
 
 class Adm(Cliente):
 
-    def __init__(self, topico):
-        Cliente.__init__(self, "adm", "adm/")
-        self.__lixeiras
+    def __init__(self):
+        Cliente.__init__(self, "adm", "setor")
+        self.__lixeiras = []
    
     def getLixeirasByNumber(self, number: int) -> list:
         """Retorna a quantidade de lixeiras exigida
@@ -42,9 +42,7 @@ class Adm(Cliente):
         while True:
             try:
                 super().receberDados()
-                if 'dados' in self._msg:
-                    self.__lixeiras = self._msg['dados']['lixeiras']
-                
+                self.__lixeiras = self._msg.get('dados')
             except Exception as ex:
                 print("Erro ao receber dados => ", ex)
                 break

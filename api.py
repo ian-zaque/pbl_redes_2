@@ -3,6 +3,7 @@ from model.adm import Adm
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
+adm = Adm()
 
 @app.route('/')
 def index():
@@ -12,7 +13,7 @@ def index():
 @app.route('/lixeiras/<number>', methods=['GET'])
 def getLixeirasByNumber(number: int):
     try:
-        lixeiras = Adm.getLixeirasByNumber(number)
+        lixeiras = adm.getLixeirasByNumber(number)
         return str(lixeiras)
     except Exception as ex:
         return f"Erro: {ex}"
@@ -20,7 +21,7 @@ def getLixeirasByNumber(number: int):
 @app.route('/lixeira/<id>', methods=['GET'])
 def getLixeiraByID(id):
     try:
-        lixeiras = Adm.getLixeiraByID(id)
+        lixeiras = adm.getLixeiraByID(id)
         return str(lixeiras)
     except Exception as ex:
         return f"Erro: {ex}"

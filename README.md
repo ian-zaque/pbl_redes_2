@@ -49,10 +49,14 @@
 
 5. Execute os scripts seguindo a ordem:.
     1. Servidor:
-        ```sh
-        python3 control/setor.py
-        ``` 
-
+        1. Servidor principal:
+          ```sh
+          python3 control/servidorPrincial.py
+          ```
+        2. Sevirdor 
+          ```sh
+          python3 control/setor.py
+          ```
     2. Caminhão:
         ``` sh
         python3 model/caminhao.py
