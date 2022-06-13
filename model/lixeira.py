@@ -154,18 +154,13 @@ def geradorLixeiras(velocicdade_gerarLixeira: int = 5, velocidade_gerar_addLixo:
         velocidade_gerar_addLixo (int): velocidade em segundos que o lixo sera adicionado. 
             5 por padrao.
     """
-    sleep(velocicdade_gerarLixeira)
-    l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
-    l.run()
-    sleep(velocidade_gerar_addLixo)
-    l.addLixo(randint(1, 100))
-    return l
+    while True:
+        sleep(velocicdade_gerarLixeira)
+        l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
+        l.run()
+        sleep(velocidade_gerar_addLixo)
+        l.addLixo(randint(1, 100))
+    
 
-lixeira = Lixeira(1, 4)
-lixeira.run()
 
-sleep(15)
-
-lixeira.addLixo(100)
-# while True:
-#     l = geradorLixeiras()
+geradorLixeiras()
