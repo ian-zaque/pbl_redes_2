@@ -51,9 +51,9 @@
     1. Servidor:
         1. Servidor principal:
           ```sh
-          python3 control/servidorPrincial.py
+          python3 control/servidorPrincipal.py
           ```
-        2. Sevirdor 
+        2. Servidor 
           ```sh
           python3 control/setor.py
           ```
