@@ -7,6 +7,14 @@ class Adm(Cliente):
         Cliente.__init__(self, "adm", "setor")
         self.__lixeiras = []
    
+    def getLixeiras(self) -> list:
+        """Retorna todas as lixeiras no sistema
+        
+        Resturns:
+            list: lista de lixeiras
+        """
+        return self.__lixeiras
+   
     def getLixeirasByNumber(self, number: int) -> list:
         """Retorna a quantidade de lixeiras exigida
 

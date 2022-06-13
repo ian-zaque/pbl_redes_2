@@ -17,6 +17,16 @@ def getLixeirasByNumber(number: int):
         return str(lixeiras)
     except Exception as ex:
         return f"Erro: {ex}"
+    
+
+@app.route('/lixeiras', methods=['GET'])
+def getLixeirasr():
+    try:
+        lixeiras = adm.getLixeiras()
+        return str(lixeiras)
+    except Exception as ex:
+        return f"Erro: {ex}"
+
 
 @app.route('/lixeira/<id>', methods=['GET'])
 def getLixeiraByID(id):
