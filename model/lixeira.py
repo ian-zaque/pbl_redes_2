@@ -99,15 +99,17 @@ class Lixeira(Cliente):
     def generateRandomData(self):
         # options = {1: 'add', 2:'bloquear', 3:'desbloquear'}
         while self.__bloqueado == False:
-            sleep(2)
-            option = randint(1,3)
+            sleep(5)
+            self.addLixo(randint(1,100))
+            # sleep(2)
+            # option = randint(1,3)
             
-            if option == 1: self.addLixo(1)
-            elif option == 2: self.bloquear()
-            elif option == 3: self.desbloquear()
+            # if option == 1: self.addLixo(1)
+            # elif option == 2: self.bloquear()
+            # elif option == 3: self.desbloquear()
             
-            option = 0
-            sleep(3)
+            # option = 0
+            # sleep(3)
     
     def receberDados(self):
         """Recebe a mensagem do servidor e realiza ações
@@ -154,13 +156,13 @@ def geradorLixeiras(velocicdade_gerarLixeira: int = 5, velocidade_gerar_addLixo:
         velocidade_gerar_addLixo (int): velocidade em segundos que o lixo sera adicionado. 
             5 por padrao.
     """
+    sleep(velocicdade_gerarLixeira)
+    l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
+    l.run()
     while True:
-        sleep(velocicdade_gerarLixeira)
-        l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
-        l.run()
         sleep(velocidade_gerar_addLixo)
         l.addLixo(randint(1, 100))
     
-
-
-geradorLixeiras()
+l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
+l.run()
+Thread(target=l.generateRandomData).start()

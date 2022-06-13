@@ -7,7 +7,7 @@ from paho.mqtt.client import Client
 class Server():
     
     def __init__(self, topic: str, topics: list = []):
-        self._broker = 'test.mosquitto.org'
+        self._broker = 'localhost'
         self._port = 1883
         self._server_id = topic
         self._topics = topics
