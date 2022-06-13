@@ -52,20 +52,19 @@ class Caminhao(Cliente):
         """Recebe a mensagem do servidor e realiza ações
         """
         while True:
-            # try:
+            try:
                 super().receberDados()
                 self.__lixeiras_coletar = self._msg.get('dados')
                 if len(self.__lixeiras_coletar) > 0:
                     self.coletarLixeira()
-            # except Exception as ex:
-            #     print("Erro ao receber dados => ", ex)
-            #     break
+            except Exception as ex:
+                print("Erro ao receber dados => ", ex)
+                break
 
     def run(self):
         """"Metodo que inicia o servidor MQTT
         """
-        
         super().run()
-        self._client_mqtt.subscribe('caminhao/#')
+        self._client_mqtt.subscribe('setor/caminhao/listaColeta')
 
 Caminhao(12, 25).run()

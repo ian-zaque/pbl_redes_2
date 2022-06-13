@@ -34,7 +34,7 @@ class Lixeira(Cliente):
             "status": status, 
             "qtd_lixo": self.__lixo,
             "capacidade": self.__capacidade, 
-            "porcentagem": f'{self.__porcentagem:,.2f}'+'%'
+            "porcentagem": f'{self.__porcentagem:,.3f}'+'%'
         }
     
     def addLixo(self, lixo: int):
@@ -145,34 +145,27 @@ class Lixeira(Cliente):
 
 
 
-def geradorLixeiras(vocidade_gerar_dados: int = 5):
+def geradorLixeiras(velocicdade_gerarLixeira: int = 5, velocidade_gerar_addLixo: int = 5)-> Lixeira:
     """Gera lixeiras com quantidades de lixo geradas de forma aleatoria
 
     Args:
-        vocidade_gerar_dados (int): velocidade em segundo que o lixo sera adicionado. 
+        velocicdade_gerarLixeira (int): velocidade em segundos que a lixeira sera criada
+            5 por padrao.
+        velocidade_gerar_addLixo (int): velocidade em segundos que o lixo sera adicionado. 
             5 por padrao.
     """
-      
-    latitude = randint(1, 2000)
-    longitude = randint(1 , 2000)
-    
-    l = Lixeira(latitude, longitude)
+    sleep(velocicdade_gerarLixeira)
+    l = Lixeira(latitude=randint(1, 2000), longitude=randint(1, 2000))
     l.run()
-    
-    # sleep(vocidade_gerar_dados)
-    
-    # l.addLixo(randint(1, 100))
-    
-l = Lixeira(10, 30)
-l.run()
-l2 = Lixeira(20, 34)
-l2.run()
+    sleep(velocidade_gerar_addLixo)
+    l.addLixo(randint(1, 100))
+    return l
+
+lixeira = Lixeira(1, 4)
+lixeira.run()
 
 sleep(15)
-l.addLixo(85)
-sleep(2)
-l.addLixo(20)
 
+lixeira.addLixo(100)
 # while True:
-#     Thread(target=geradorLixeiras).start() 
-#     sleep(5)
+#     l = geradorLixeiras()

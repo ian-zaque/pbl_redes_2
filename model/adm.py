@@ -46,3 +46,9 @@ class Adm(Cliente):
             except Exception as ex:
                 print("Erro ao receber dados => ", ex)
                 break
+            
+    def run(self):
+        """"Metodo que inicia o servidor MQTT
+        """
+        super().run()
+        self._client_mqtt.subscribe('setor/adm/lixeiras')

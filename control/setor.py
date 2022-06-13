@@ -55,7 +55,7 @@ class Setor(Server):
                 self.__lixeiras[lixeirasId.index(msg['dados']['id'])] = msg['dados']
                 
             #verifica se a lixeira ja esta em estado critico
-            if float(msg.get('dados').get('porcentagem')[:2]) >= 75:
+            if float(msg.get('dados').get('porcentagem')[:3]) >= 75:
                 print(f'LIXEIRA {msg["dados"]["id"]} ESTÁ EM ESTADO CRÍTICO!')
                 if msg['dados']['id'] not in lixeirasColetarId:
                         self.__lixeiras_coletar.append(msg.get('dados'))

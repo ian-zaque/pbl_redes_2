@@ -93,7 +93,7 @@ class SetorPrincial(Server):
         if len(coletar):
             coletar = sorted(coletar, key=lambda l:l["porcentagem"], reverse=True)
             mensagemCaminhao = {'dados': coletar}
-            self.enviarDados('caminhao/', mensagemCaminhao)
+            self.enviarDados('setor/caminhao/listaColeta', mensagemCaminhao)
             
     def enviarDadosAdm(self):
         """Envia as lixeiras a serem coletada para o tópico adm/
@@ -102,7 +102,7 @@ class SetorPrincial(Server):
         if len(lixeiras):
             lixeiras = sorted(lixeiras, key=lambda l:l["porcentagem"], reverse=True)
             mensageAdm = {'dados': lixeiras}
-            self.enviarDados('adm/', mensageAdm)
+            self.enviarDados('setor/adm/lixeiras', mensageAdm)
         
     def maisProximo(self, posicao: tuple[int, int], elementos: list[dict]):
         """Seleciona o elemento mais proximo em relacao a uma linha reta
